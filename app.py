@@ -1,56 +1,64 @@
 import streamlit as st
 
-# Configuração da página - Layout Wide fica mais moderno
-st.set_page_config(page_title="Portal do Aluno", page_icon="🎓", layout="centered")
+# Configuração da página
+st.set_page_config(page_title="Portal Pro", page_icon="🚀")
 
-# Estilização básica para um visual mais "clean"
+# Injeção de CSS para mudar as cores de fundo e fontes
 st.markdown("""
     <style>
-    .main {
-        background-color: #f5f7f9;
+    /* Cor de fundo do app */
+    .stApp {
+        background: linear-gradient(to right, #1e1e2f, #2d2d44);
+        color: white;
     }
-    .stButton>button {
-        border-radius: 20px;
-        height: 3em;
+    
+    /* Estilização dos inputs */
+    .stNumberInput div div input {
+        background-color: #3d3d5c !important;
+        color: #00ffcc !important;
+        border-radius: 10px !important;
+    }
+
+    /* Botão com gradiente */
+    div.stButton > button:first-child {
+        background: linear-gradient(45deg, #00f2fe 0%, #4facfe 100%);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 15px;
         font-weight: bold;
+        transition: 0.3s;
+    }
+    
+    div.stButton > button:first-child:hover {
+        transform: scale(1.02);
+        box-shadow: 0px 4px 15px rgba(79, 172, 254, 0.4);
     }
     </style>
     """, unsafe_allow_html=True)
 
-# Sidebar - Informações do Curso
-with st.sidebar:
-    st.title("👨‍💻 Desenvolvedor")
-    st.info("Minicurso: IA para Devs")
-    st.divider()
-    st.write("Versão 2.0")
+# Título com emoji e cor
+st.markdown("<h1 style='text-align: center; color: #00f2fe;'>🎓 Simulador de Notas</h1>", unsafe_allow_html=True)
+st.write("---")
 
-# Conteúdo Principal
-st.title("📊 Simulador de Desempenho")
-st.caption("Insira as notas abaixo para calcular a média e verificar o status.")
+# Layout em colunas
+col1, col2 = st.columns(2)
 
-# Criando um card visual com as colunas
-with st.container():
-    c1, c2 = st.columns(2)
+with col1:
+    st.markdown("### 📝 Bimestre 1")
+    n1 = st.number_input("Digite a primeira nota:", min_value=0.0, max_value=10.0, step=0.5, key="n1")
+
+with col2:
+    st.markdown("### 📝 Bimestre 2")
+    n2 = st.number_input("Digite a segunda nota:", min_value=0.0, max_value=10.0, step=0.5, key="n2")
+
+st.write("") # Espaçador
+
+if st.button("CALCULAR MÉDIA FINAL", use_container_width=True):
+    media = (n1 + n2) / 2
     
-    with c1:
-        # Usei number_input para evitar erros de digitação de texto
-        n1 = st.number_input("Nota do 1º Bimestre", min_value=0.0, max_value=10.0, step=0.1)
+    # Área de Resultado Colorida
+    st.markdown(f"<h2 style='text-align: center;'>Média: {media:.1f}</h2>", unsafe_allow_html=True)
     
-    with c2:
-        n2 = st.number_input("Nota do 2º Bimestre", min_value=0.0, max_value=10.0, step=0.1)
-
-    st.markdown("---") # Linha divisória
-
-    if st.button("Analisar Desempenho", use_container_width=True, type="primary"):
-        media = (n1 + n2) / 2
-        
-        # Exibição do resultado com métricas
-        st.subheader(f"Média Final: {media:.1f}")
-        
-        if media >= 6.0:
-            st.balloons()
-            st.success("**APROVADO!** Parabéns pelo seu esforço! 🎉")
-        elif media >= 4.0:
-            st.warning("**RECUPERAÇÃO.** Você ainda tem uma chance! 📚")
-        else:
-            st.error("**REPROVADO.** Procure o apoio pedagógico. ❌")
+    if media >= 6.0:
+        st.success(f"🔥 **AP
